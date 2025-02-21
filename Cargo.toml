@@ -1,6 +1,7 @@
 [workspace]
 
 members = [
-    "hello_main"
+    "hello_main",
+    "cli_app"
 ]
 resolver = "2"
