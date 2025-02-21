@@ -22,7 +22,7 @@ async  fn hello() -> &'static str { "Hello, World!.. What's up?" }
 
 async fn hello_json() -> Result<(StatusCode, Json<Response>), AppError>{
     let res = Response{
-        message: generate_message().expect("Failed to generate message")?,
+        message: generate_message().context("Failed to generate message")?,
     };
     Ok((StatusCode::OK, Json(res)))
 }
