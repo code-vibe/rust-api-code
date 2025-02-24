@@ -6,3 +6,6 @@ edition = "2021"
 [dependencies]
 clap = "4"
 anyhow = "1.0.96"
+config = "0.14"
+dotenv = "0.15"
+serde = { version = "1", features = ["derive"] }
