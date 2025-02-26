@@ -2,13 +2,13 @@ use clap::{Arg, Command};
 use cli_app::{commands, settings};
 pub fn main() -> anyhow::Result<()> {
 
-    let mut command = Command::new("Sample Cli application")
+    let mut command = Command::new("Sample CLI application")
         .arg(
             Arg::new("config")
-            .long("config")
                 .short('c')
-                .default_value(".config.json")
-                .help("Configuration file location"),
+                .long("config")
+                .help("Configuration file location")
+                .default_value("config.json"),
         );
     command = commands::configure(command);
 
@@ -22,10 +22,10 @@ pub fn main() -> anyhow::Result<()> {
     commands::handle(&matches)?;
 
 
-    let settings = settings::AppSettings::new(config_location, "APP")?;
+    let settings = settings::Settings::new(config_location, "APP")?;
     println!(
         "db url {}",
-        settings.database.url.unwrap_or("missing database url".to_owned())
+        settings.database.url.unwrap_or("missing database url".to_string())
     );
 
     println!(
@@ -34,3 +34,4 @@ pub fn main() -> anyhow::Result<()> {
     );
     Ok(())
 }
+
