@@ -32,17 +32,21 @@ pub struct Settings {
 }
 
 impl Settings {
-pub fn new(location: &str, env_prefix: &str) -> anyhow::Result<Self> {
-    let s = Config::builder()
-        .add_source(File::with_name(location))
-        .add_source(
-            Environment::with_prefix(env_prefix)
-                .separator("__")
-                .prefix_separator("__"),
-        )
-        .set_override("config.location", location)?
-        .set_override("config.env_prefix", env_prefix)?
-        .build()?;
+    pub fn new(location: Option<&str>, env_prefix: &str) -> anyhow::Result<Self> {
+        let mut builder = Config::builder();
+        if let Some(location) = location {
+            builder = builder.add_source(File::with_name(location));
+        }
+
+        let s = builder
+            .add_source(
+                Environment::with_prefix(env_prefix)
+                    .separator("__")
+                    .prefix_separator("__"),
+            )
+            .set_override("config.location", location)?
+            .set_override("config.env_prefix", env_prefix)?
+            .build()?;
 
     let settings = s.try_deserialize()?;
 
