@@ -2,6 +2,7 @@ mod hello;
 mod serve;
 
 use clap::{ArgMatches, Command};
+use crate::settings::Settings;
 
 pub fn configure(command: Command) -> Command {
     command
@@ -10,11 +11,11 @@ pub fn configure(command: Command) -> Command {
         .arg_required_else_help(true)
 }
 
-pub fn handle(matches: &ArgMatches) -> anyhow::Result<()> {
+pub fn handle(matches: &ArgMatches, settings: &Settings) -> anyhow::Result<()> {
     if let Some((cmd, matches)) = matches.subcommand() {
         match cmd {
-            hello::COMMAND_NAME => hello::handle(matches)?,
-            serve::COMMAND_NAME => serve::handle(matches)?,
+            hello::COMMAND_NAME => hello::handle(matches,settings)?,
+            serve::COMMAND_NAME => serve::handle(matches,settings)?,
             &_ => {}
         }
     }
