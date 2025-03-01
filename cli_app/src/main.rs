@@ -19,20 +19,10 @@ pub fn main() -> anyhow::Result<()> {
         .get_one("config")
         .map(|s: &String| Some(s.as_str()))
         .unwrap_or(None);
-
-    commands::handle(&matches)?;
-
-
     let settings = settings::Settings::new(config_location, "APP")?;
-    println!(
-        "db url {}",
-        settings.database.url.unwrap_or("missing database url".to_string())
-    );
+    commands::handle(&matches, &settings)?;
 
-    println!(
-        "log level: {}",
-        settings.logging.log_level.unwrap_or("info".to_string())
-    );
+
     Ok(())
 }
 
