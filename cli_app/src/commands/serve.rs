@@ -37,7 +37,7 @@ fn start_tokio(port:u16, settings: &Settings) -> anyhow::Result<()> {
                 port
             );
 
-            let router = Router::new();
+            let router = crate::api::configure();
             let listener = tokio::net::TcpListener::bind(addr).await?;
             axum::serve(listener,router.into_make_service()).await?;
 
