@@ -41,7 +41,7 @@ struct Response {
 
 struct AppError(anyhow::Error);
 
-//Thiss allows ? to automatically convert anyhow::Error to AppError
+//This allows ? to automatically convert anyhow::Error to AppError
 impl From<anyhow::Error> for AppError {
     fn from(value: anyhow::Error) -> Self {
         Self(value)
