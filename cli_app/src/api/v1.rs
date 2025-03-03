@@ -1,6 +1,6 @@
-use axum::Router;
+use super::handlers;
 use axum::routing::get;
-use crate::api::handlers;
+use axum::Router;
 
 pub fn configure() -> Router {
     Router::new().route("/hello", get(handlers::hello::hello))
