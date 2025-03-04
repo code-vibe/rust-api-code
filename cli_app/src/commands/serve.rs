@@ -1,7 +1,14 @@
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::sync::Arc;
-use axum::{Router, ServiceExt};
+use axum::{Extension, Router, ServiceExt};
 use clap::{value_parser, Arg, ArgMatches, Command};
+use tracing::{subscriber, Level};
+use tower_http::trace::TraceLayer;
+use tracing::level_filters::LevelFilter;
+use tracing_subscriber::layer::SubscriberExt;
+use tracing_subscriber::fmt;
+use tracing_subscriber::fmt::layer;
+use tracing_subscriber::util::SubscriberInitExt;
 use crate::settings::Settings;
 use crate::state::ApplicationState;
 
@@ -33,8 +40,15 @@ fn start_tokio(port: u16, settings: &Settings) -> anyhow::Result<()> {
         .enable_all()
         .build()?
         .block_on(async move {
+            let subscriber = tracing_subscriber::registry()
+                .with(LevelFilter::from_level(Level::TRACE))
+                .with(fmt::Layer::default());
+
+            subscriber.init();
+
             let state = Arc::new(ApplicationState::new(settings)?);
             let router = crate::api::configure(state);
+                //.layer(TraceLayer::new_for_http());
 
             let addr = SocketAddr::new(
                 IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
