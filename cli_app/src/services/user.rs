@@ -1,18 +1,20 @@
+use std::collections::HashMap;
 use std::sync::Mutex;
+use crate::model::User;
 
-pub struct InMemoryUserService {
+pub struct InMemoryUserStore {
     pub counter : i64,
     pub items : HashMap<i64, User>,
 }
 
 pub struct InMemoryUserService {
-    data: Mutex<InMemoryUserService>,
+    data: Mutex<InMemoryUserStore>,
 }
 
-impl default for InMemoryUserService {
+impl Default for InMemoryUserService {
     fn default() -> Self {
        Self {
-           data: Mutex::new(InMemoryUserService {
+           data: Mutex::new(InMemoryUserStore {
                counter : 0,
                items: Default::default(),
            }),
