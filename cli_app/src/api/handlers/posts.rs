@@ -11,7 +11,7 @@ pub async fn create(
     State(state): State<Arc<ApplicationState>>,
     Json(payload): Json<CreatePostRequest>,
 ) -> Result<Json<SinglePostResponse>, AppError> {
-    let post = state.post_service.create_post(payload).await?;
+    let post = state.post_service.create_post(payload).await.expect("create post");
 
     let response = SinglePostResponse { data: post };
 
@@ -23,7 +23,7 @@ pub async fn update(
     Path(id): Path<i64>,
     Json(payload): Json<UpdatePostRequest>,
 ) -> Result<Json<SinglePostResponse>, AppError> {
-    let post = state.post_service.update_post( payload).await?;
+    let post = state.post_service.update_post( payload).await.expect("update post") ;
 
     let response = SinglePostResponse { data: post };
 
@@ -34,14 +34,14 @@ pub async fn delete(
     State(state): State<Arc<ApplicationState>>,
     Path(id): Path<i64>,
 ) -> Result<Json<()>, AppError> {
-    state.post_service.delete_post(id).await?;
+    state.post_service.delete_post(id).await.expect("Can't delete post");
 
     Ok(Json(()))
 }
 pub async fn list(
     State(state): State<Arc<ApplicationState>>,
 ) -> Result<Json<ListPostsResponse>, AppError> {
-    let posts = state.post_service.get_all_posts().await?;
+    let posts = state.post_service.get_all_posts().await.expect("Can't list posts");
 
     let response = ListPostsResponse { data: posts };
 
@@ -60,6 +60,8 @@ pub async fn get(
 
             Ok(Json(response))
         }
-        Err(e) => Err(AppError::from((StatusCode::NOT_FOUND, e))),
+        Err(e) => Err(AppError::from((AppError::InternalServer {
+            location
+        }))),
     }
 }
