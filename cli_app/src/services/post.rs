@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::sync::Mutex;
+use tokio::sync::Mutex;
 use crate::model::{CreatePostRequest, Post, UpdatePostRequest};
 
 pub struct InMemoryPostStore {
