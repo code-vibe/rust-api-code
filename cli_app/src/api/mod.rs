@@ -4,7 +4,8 @@ use crate::state::ApplicationState;
 
 mod handlers;
 mod v1;
-mod response;
+pub mod response;
+pub mod errors;
 
 pub fn configure(state: Arc<ApplicationState>) -> Router {
     Router::new().nest("/v1", v1::configure(state))
