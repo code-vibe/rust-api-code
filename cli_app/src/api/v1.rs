@@ -2,7 +2,6 @@ use std::sync::Arc;
 use super::handlers;
 use axum::routing::{delete, get, post, put};
 use axum::Router;
-use crate::services;
 use crate::state::ApplicationState;
 
 pub fn configure(state: Arc<ApplicationState>) -> Router {
@@ -25,7 +24,7 @@ pub fn configure(state: Arc<ApplicationState>) -> Router {
         )
         .route(
             "/posts/:id",
-            put(handlers::posts::update).with_state(state.clone()),
+            put(handlers::posts::update)).with_state(state.clone()
         )
         .route(
             "/posts/:id",
