@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-use std::sync::Mutex;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
@@ -38,6 +36,7 @@ pub struct Post {
     pub updated: DateTime<Utc>,
 }
 
+#[derive(Deserialize)]
 pub struct CreatePostRequest {
     pub author_id: i64,
     pub slug: String,
@@ -46,6 +45,7 @@ pub struct CreatePostRequest {
     pub status: PostStatus,
 }
 
+#[derive(Deserialize)]
 pub struct UpdatePostRequest {
     pub id: i64,
     pub slug: String,
