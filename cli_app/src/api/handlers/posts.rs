@@ -1,15 +1,17 @@
 use std::sync::Arc;
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
-use axum::Json;
+use axum::{Extension, Json};
 use crate::api::errors::AppError;
 use crate::api::response::post::{ListPostsResponse, SinglePostResponse};
+use crate::api::response::TokenClaims;
 use crate::model::{CreatePostRequest, UpdatePostRequest};
 use crate::services::post::PostService;
 use crate::state::ApplicationState;
 
 
 pub async fn create(
+    Extension(_claims): Extension<TokenClaims>,
     State(state): State<Arc<ApplicationState>>,
     Json(payload): Json<CreatePostRequest>,
 ) -> Result<Json<SinglePostResponse>, AppError> {
