@@ -14,10 +14,18 @@ pub struct ConfigInfo {
     pub env_prefix: Option<String>,
 }
 
+#[derive(Deserialize, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct OtlpTarget {
+    pub address: String,
+    pub authorization: Option<String>,
+}
+
 #[derive(Debug, Deserialize,Default, Clone)]
 #[allow(unused)]
 pub struct Logging {
     pub log_level: Option<String>,
+    pub otlp_target: Option<OtlpTarget>,
 }
 
 #[derive(Debug, Deserialize,Default, Clone)]
