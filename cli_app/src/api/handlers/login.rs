@@ -10,6 +10,17 @@ use crate::api::response::TokenClaims;
 use crate::services::user::UserService;
 use crate::state::ApplicationState;
 
+
+#[utoipa::path(
+    post,
+    path = "/login",
+    tag = "login",
+    request_body = LoginRequest,
+    responses(
+        (status = 200, description = "Login success", body = LoginResponse),
+        (status = 401, description = "Unauthorized"),
+    ),
+)]
 pub async fn login(
     State(state): State<Arc<ApplicationState>>,
     Json(payload): Json<LoginRequest>,
