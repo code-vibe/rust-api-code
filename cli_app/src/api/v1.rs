@@ -1,9 +1,9 @@
-use std::sync::Arc;
 use super::handlers;
-use axum::routing::{delete, get, post, put};
-use axum::{middleware, Router};
 use crate::api::middleware::auth::auth;
 use crate::state::ApplicationState;
+use axum::routing::{delete, get, post, put};
+use axum::{middleware, Router};
+use std::sync::Arc;
 
 pub fn configure(state: Arc<ApplicationState>) -> Router {
     Router::new()
@@ -27,14 +27,51 @@ pub fn configure(state: Arc<ApplicationState>) -> Router {
         )
         .route(
             "/posts/:id",
-            put(handlers::posts::update)).with_state(state.clone()
+            put(handlers::posts::update)
+                .with_state(state.clone())
+                .route_layer(middleware::from_fn_with_state(state.clone(), auth)),
         )
         .route(
             "/posts/:id",
-            delete(handlers::posts::delete).with_state(state),
+            delete(handlers::posts::delete)
+                .with_state(state.clone())
+                .route_layer(middleware::from_fn_with_state(state.clone(), auth)),
         )
-       /* .route(
-            "/login",
-            post(handlers::login::login).with_state(state)
-        )*/
+        .route("/login", post(handlers::login::login).with_state(state))
 }
+
+use utoipa::OpenApi;
+
+#[derive(OpenApi)]
+#[openapi(
+    paths(
+        handlers::hello::hello,
+        handlers::login::login,
+        handlers::posts::create,
+        handlers::posts::update,
+        handlers::posts::delete,
+        handlers::posts::list,
+        handlers::posts::get,
+    ),
+    components(
+        schemas(
+            crate::api::request::login::LoginRequest,
+            crate::api::response::login::LoginResponse,
+            crate::model::CreatePostRequest,
+            crate::model::UpdatePostRequest,
+            crate::api::response::post::ListPostsResponse,
+            crate::api::response::post::SinglePostResponse,
+            crate::model::Post,
+            crate::model::PostStatus,
+        ),
+    ),
+    tags(
+        (name = "hello", description = "Hello"),
+        (name = "login", description = "Login"),
+        (name = "posts", description = "Posts"),
+    ),
+    servers(
+        (url = "/v1", description = "Local server"),
+    ),
+)]
+pub struct ApiDoc;
