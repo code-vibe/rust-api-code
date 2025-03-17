@@ -58,7 +58,7 @@ pub fn init_tracer(otlp_target: &OtlpTarget) -> Result<Tracer, TraceError> {
     Ok(tracer_provider.tracer("sample_application"))
 }
 pub fn configure() -> Command {
-    Command::new(COMMAND_NAME).about("Starts HTTP Server").arg(
+    Command::new(COMMAND_NAME).about("Starts the HTTP Server").arg(
         Arg::new("port")
             .short('p')
             .long("port")
@@ -84,7 +84,7 @@ fn start_tokio(port: u16, settings: &Settings) -> anyhow::Result<()> {
         .build()?
         .block_on(async move {
             let telemetry_layer = if let Some(otlp_target) = settings.logging.otlp_target.clone() {
-                println!("OTLP Target is from Settings: {:?}", otlp_target); // Print the value from your settings
+                println!("OTLP Target  from Settings: {:?}", otlp_target); // Print the value from your settings
 
                 let tracer = init_tracer(&otlp_target)?;
                 Some(tracing_opentelemetry::layer().with_tracer(tracer))
